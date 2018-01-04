@@ -1,3 +1,8 @@
-<p>
-  login works!
-</p>
+<form (ngSubmit)="login()">
+  <input type="text" placeholder="Username" [(ngModel)]="username" name="username">
+  <input type="password" placeholder="Password" [(ngModel)]="password" name="password">
+  <button>Login</button>
+
+  <p>{{result?.msg}}</p>
+  <p>{{result?.token}}</p>
+</form>
