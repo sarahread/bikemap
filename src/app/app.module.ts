@@ -9,6 +9,8 @@ import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { BaseUrlInterceptor } from './interceptors/baseurl';
 import { AddComponent } from './trips/add/add.component';
+import { JWTInterceptor } from './interceptors/jwt';
+import { AuthService } from './auth/auth.service';
 
 @NgModule({
   declarations: [
@@ -23,11 +25,19 @@ import { AddComponent } from './trips/add/add.component';
     FormsModule,
     HttpClientModule
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: BaseUrlInterceptor,
-    multi: true
-  }],
+  providers: [
+    AuthService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BaseUrlInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JWTInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
