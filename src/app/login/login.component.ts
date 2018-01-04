@@ -1,18 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+// import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  // providers: [AuthService]
 })
 export class LoginComponent implements OnInit {
   username: string;
   password: string;
   error: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    // private auth: AuthService
+  ) { }
   
   ngOnInit() {
   }
@@ -21,12 +26,12 @@ export class LoginComponent implements OnInit {
     this.error = null;
     
     try {
-      await this.http.post('auth/login', {
+      const response: any = await this.http.post('auth/login', {
         username: this.username,
         password: this.password
       }).toPromise();
-
-      // TODO: Do something after logging in
+      console.log('token', response);
+      // this.auth.token = response.token;
     } catch (e) {
       this.error = e.error.msg;
     }
