@@ -13,5 +13,7 @@ export class JWTInterceptor implements HttpInterceptor {
     const authReq = req.clone({ headers: req.headers.set('Authorization', authHeader) });
 
     return next.handle(authReq);
-	}
+  }
+  
+  // TODO: Handle 401 errors and invalidate token
 }
