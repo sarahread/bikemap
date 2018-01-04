@@ -1,0 +1,6 @@
+<h1>Add Trip</h1>
+<form (ngSubmit)="add()">
+  <input type="text" placeholder="Trip Name" [(ngModel)]="tripName" name="tripName">
+  <input type="number" placeholder="Distance" [(ngModel)]="totalDistance" name="totalDistance">
+  <button>Add Trip</button>
+</form>
