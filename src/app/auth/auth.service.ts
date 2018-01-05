@@ -5,7 +5,7 @@ export class AuthService {
 
   public get token(): string {
   	// TODO: This should work without localstorage, ie: private mode in safari
-  	return window.localStorage.getItem('token');
+  	return window.localStorage.getItem('token') || '';
   }
 
   public set token(token: string) {
@@ -20,7 +20,7 @@ export class AuthService {
   	// TODO
   }
 
-  public async reguster(): Promise<void> {
+  public async register(): Promise<void> {
   	// TODO
   }
 

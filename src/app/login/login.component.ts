@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-// import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    // private auth: AuthService
+    private auth: AuthService
   ) { }
   
   ngOnInit() {
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
         password: this.password
       }).toPromise();
       console.log('token', response);
-      // this.auth.token = response.token;
+      this.auth.token = response.token;
     } catch (e) {
       this.error = e.error.msg;
     }
