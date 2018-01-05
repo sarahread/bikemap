@@ -18,7 +18,7 @@ export class AddComponent implements OnInit {
   }
 
   async add() {
-    console.log(this.tripName + ", distance: " + this.totalDistance);
+    console.log(this.name + ", distance: " + this.totalDistance);
     this.result = await this.http.post('trips', {
       name: this.name,
       totalDistance: this.totalDistance
