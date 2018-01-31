@@ -1,7 +1,10 @@
+import { environment } from '../environments/environment';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AgmCoreModule } from '@agm/core';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -11,6 +14,7 @@ import { BaseUrlInterceptor } from './interceptors/baseurl';
 import { AddComponent } from './trips/add/add.component';
 import { JWTInterceptor } from './interceptors/jwt';
 import { AuthService } from './auth/auth.service';
+import { MapComponent } from './trips/map/map.component';
 
 @NgModule({
   declarations: [
@@ -18,12 +22,16 @@ import { AuthService } from './auth/auth.service';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    AddComponent
+    AddComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    AgmCoreModule.forRoot({
+      apiKey: environment.googleMapsApiKey
+    })
   ],
   providers: [
     AuthService,
