@@ -1,15 +1,25 @@
 import { environment } from '../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
+import { GoogleMapsAPIWrapper, PolylineManager, AgmPolyline, Quer } from '@agm/core';
+
+declare var google: any;
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  styleUrls: ['./map.component.scss'],
+  providers: [GoogleMapsAPIWrapper, PolylineManager]
 })
 export class MapComponent implements OnInit {
-    title: string = 'My first AGM project';
-    lat: number = 51.678418;
-    lng: number = 7.809007;
+    origin = { lng: 4.333, lat: -1.2222 };
+    destination = { lng: 22.311, lat: -0.123 };
+
+    directionsService;
+    map;
+    path;
+    finishedPath;
+    percent = 0.5;
+
     styles = [
       {
         "stylers": [
@@ -248,7 +258,84 @@ export class MapComponent implements OnInit {
       }
     ];
 
-    constructor() {}
+    constructor(private mapsApi: GoogleMapsAPIWrapper, private polylineManager: PolylineManager) {}
 
     ngOnInit() {}
+
+    ngAfterViewInit() {}
+
+    onMapReady(map) {
+      this.map = map;
+
+      this.directionsService = new google.maps.DirectionsService;
+      const placesService = new google.maps.places.PlacesService(map);
+      
+      placesService.textSearch({
+        query: 'Calgary'
+      }, (response, status) => {
+        if (status == 'OK') {
+          this.origin = response[0].geometry.location;
+          this.updateMap();
+        } else {
+          // TODO
+        }
+      });
+
+      placesService.textSearch({
+        query: 'Edmonton'
+      }, (response, status) => {
+        if (status == 'OK') {
+          this.destination = response[0].geometry.location;
+          this.updateMap();
+        } else {
+          // TODO
+        }
+      });
+    }
+
+    updateMap() {
+      this.directionsService.route({
+        origin: this.origin,
+        destination: this.destination,
+        waypoints: [],
+        optimizeWaypoints: true,
+        travelMode: 'DRIVING'
+      }, (response, status) => {
+        if (status == 'OK') {
+          console.log('response', response);
+          this.path = response.routes[0].overview_path;
+
+          // Calculate total length of path
+
+          const totalDistance = response.routes[0].legs.reduce((a, b) => {
+            return a ? a.distance.value: 0 + b ? b.distance.value : 0;
+          }, 0);
+
+          console.log('distance', totalDistance);
+
+          // Calculate point along path
+
+          const targetDistance = totalDistance * this.percent;
+          let distance = 0;
+
+          for (let ii = 0; ii < this.path.length; ii++) {
+            distance += google.maps.geometry.spherical.computeDistanceBetween(
+              this.path[ii],
+              this.path[ii + 1]
+            );
+
+            if (distance >= targetDistance) {
+              console.log('hit distance', targetDistance, 'at', ii);
+              this.finishedPath = this.path.slice(0, ii - 1);
+              break;
+            }
+          }
+
+        } else {
+          console.log('failed', status, response);
+        }
+      });
+    }
+
+    
 }

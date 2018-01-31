@@ -1,3 +1,11 @@
-<agm-map [latitude]="lat" [longitude]="lng" [styles]="styles">
-  <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+<agm-map [latitude]="lat" [longitude]="lng" [styles]="styles" (mapReady)="onMapReady($event)">
+  <agm-polyline [strokeColor]="'white'">
+      <agm-polyline-point *ngFor="let p of path" [latitude]="p.lat()" [longitude]="p.lng()"></agm-polyline-point>
+  </agm-polyline>
+
+  <agm-polyline [strokeColor]="'red'">
+    <agm-polyline-point *ngFor="let p of finishedPath" [latitude]="p.lat()" [longitude]="p.lng()"></agm-polyline-point>
+  </agm-polyline>
 </agm-map>
+
+<input type="range" min="0.0" max="1.0" step="0.1" [(ngModel)]="percent" (ngModelChange)="updateMap()">

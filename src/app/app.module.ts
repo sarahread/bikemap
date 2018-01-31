@@ -30,7 +30,8 @@ import { MapComponent } from './trips/map/map.component';
     FormsModule,
     HttpClientModule,
     AgmCoreModule.forRoot({
-      apiKey: environment.googleMapsApiKey
+      apiKey: environment.googleMapsApiKey,
+      libraries: ['places']
     })
   ],
   providers: [
