@@ -1,4 +1,4 @@
-<agm-map [latitude]="lat" [longitude]="lng" [styles]="styles" (mapReady)="onMapReady($event)">
+<agm-map [styles]="styles" (mapReady)="onMapReady($event)" [fitBounds]="bounds">
   <agm-polyline [strokeColor]="'white'" *ngFor="let route of routes">
       <agm-polyline-point *ngFor="let p of route.path" [latitude]="p.lat()" [longitude]="p.lng()"></agm-polyline-point>
   </agm-polyline>

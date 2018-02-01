@@ -56,6 +56,7 @@ export class MapComponent implements OnInit {
     directionsService;
     placesService;
     map;
+    bounds;
 
     styles = [
       {
@@ -375,7 +376,17 @@ export class MapComponent implements OnInit {
           }
         }
       });
+
+      this.zoomToFit();
     }
 
-    
+    zoomToFit() {
+      this.bounds = new google.maps.LatLngBounds();
+      this.routes.forEach(route => {
+        route.path.forEach(p => {
+          this.bounds.extend(new google.maps.LatLng(p.lat(), p.lng()));
+        });
+      });
+      console.log('bounds', this.bounds);
+    }
 }
