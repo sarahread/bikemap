@@ -14,7 +14,8 @@ import { BaseUrlInterceptor } from './interceptors/baseurl';
 import { AddComponent } from './trips/add/add.component';
 import { JWTInterceptor } from './interceptors/jwt';
 import { AuthService } from './auth/auth.service';
-import { MapComponent } from './trips/map/map.component';
+import { TripService } from './trips/trip.service';
+import { MapComponent } from './trips/map/map.component';}
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MapComponent } from './trips/map/map.component';
   ],
   providers: [
     AuthService,
+    TripService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BaseUrlInterceptor,

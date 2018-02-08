@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +12,7 @@ export class RegisterComponent implements OnInit {
   password: string;
   error: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(private auth: AuthService) { }
 
   ngOnInit() {
   }
@@ -20,14 +20,8 @@ export class RegisterComponent implements OnInit {
   async register() {
     this.error = null;
     
-    try {
-      await this.http.post('auth/register', {
-        username: this.username,
-        password: this.password
-      }).toPromise();
-
-      // TODO: Do something after logging in
-    } catch (e) {
-      this.error = e.error.msg;
-    }  }
+    this.auth.register(this.username, this.password).then((response) => {
+      console.log('auth service response', response);
+    });
+  }
 }

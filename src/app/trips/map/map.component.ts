@@ -1,13 +1,9 @@
 import { environment } from '../../../environments/environment';
-import { Component, OnInit } from '@angular/core';
-import { GoogleMapsAPIWrapper, PolylineManager, AgmPolyline, Quer } from '@agm/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { GoogleMapsAPIWrapper, PolylineManager, AgmPolyline } from '@agm/core';
+import { Trip } from '../../interfaces';
 
 declare var google: any;
-
-interface LatLng {
-  lat: number,
-  lng: number
-}
 
 @Component({
   selector: 'app-map',
@@ -16,42 +12,18 @@ interface LatLng {
   providers: [GoogleMapsAPIWrapper, PolylineManager]
 })
 export class MapComponent implements OnInit {
-    routes: {
-      origin: { query: string, lat?: number, lng?: number },
-      destination: { query: string, lat?: number, lng?: number },
-      path?: any,
-      finishedPath?: any,
-      percent?: number,
-      totalDistance?: number
-    }[] = [
-      {
-        origin: {
-          query: 'Calgary'
-        },
-        destination: {
-          query: 'Edmonton'
-        },
-        percent: 0.6
-      },
-      {
-        origin: {
-          query: 'Barcelona, Spain'
-        },
-        destination: {
-          query: 'Madrid'
-        },
-        percent: 0.85
-      },
-      {
-        origin: {
-          query: 'Frankfurt, Germany'
-        },
-        destination: {
-          query: 'Venice, Italy'
-        },
-        percent: 0.3
-      }
-    ];
+    @Input() trips: Trip[] = [];
+    // routes: Route[] = [
+    //   {
+    //     start: {
+    //       query: `Land's End, UK`
+    //     },
+    //     end: {
+    //       query: `John 'o Groats, UK`
+    //     },
+    //     distanceTravelled: [10, 10, 10, 11.52, 10.36].reduce((a, b) => a + b ) * 1000 || 0 // Convert to km
+    //   } 
+    // ];
 
     directionsService;
     placesService;
@@ -310,18 +282,18 @@ export class MapComponent implements OnInit {
       
       // Fetch lat / lng / path for routes
 
-      for (let ii = 0; ii < this.routes.length; ii++) {
-        const route = this.routes[ii];
-        const origin = await this.searchLocation(route.origin.query);
-        const destination = await this.searchLocation(route.destination.query);
+      for (let ii = 0; ii < this.trips.length; ii++) {
+        const trip = this.trips[ii];
+        const start = await this.searchLocation(trip.start.query);
+        const end = await this.searchLocation(trip.end.query);
 
-        Object.assign(route.origin, origin);
-        Object.assign(route.destination, destination);
+        Object.assign(trip.start, start);
+        Object.assign(trip.end, end);
 
-        [route.path, route.totalDistance] = await new Promise<any>(resolve => {
+        [trip.path, trip.totalDistance] = await new Promise<any>(resolve => {
           this.directionsService.route({
-            origin,
-            destination,
+            start,
+            end,
             waypoints: [],
             optimizeWaypoints: true,
             travelMode: 'DRIVING'
@@ -359,19 +331,21 @@ export class MapComponent implements OnInit {
     }
 
     updateMap() {
-      this.routes.forEach(route => {
-        const targetDistance = route.totalDistance * route.percent;
+      this.trips.forEach(trip => {
+        const targetDistance = trip.distanceTravelled / trip.totalDistance * trip.totalDistance;
+        console.log(trip.totalDistance, trip.distanceTravelled, targetDistance)
         let distance = 0;
 
-        for (let ii = 0; ii < route.path.length - 1; ii++) {
-          
+        // TODO: Allow being between path points
+
+        for (let ii = 1; ii < trip.path.length - 1; ii++) {
           distance += google.maps.geometry.spherical.computeDistanceBetween(
-            route.path[ii],
-            route.path[ii + 1]
+            trip.path[ii],
+            trip.path[ii + 1]
           );
 
           if (distance >= targetDistance) {
-            route.finishedPath = route.path.slice(0, ii - 1);
+            trip.finishedPath = trip.path.slice(0, Math.max(2, ii - 1));
             break;
           }
         }
@@ -382,8 +356,8 @@ export class MapComponent implements OnInit {
 
     zoomToFit() {
       this.bounds = new google.maps.LatLngBounds();
-      this.routes.forEach(route => {
-        route.path.forEach(p => {
+      this.trips.forEach(trip => {
+        trip.path.forEach(p => {
           this.bounds.extend(new google.maps.LatLng(p.lat(), p.lng()));
         });
       });

@@ -7,7 +7,6 @@ import { AuthService } from '../auth/auth.service';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  // providers: [AuthService]
 })
 export class LoginComponent implements OnInit {
   username: string;
@@ -25,16 +24,9 @@ export class LoginComponent implements OnInit {
   async login() {
     this.error = null;
     
-    try {
-      const response: any = await this.http.post('auth/login', {
-        username: this.username,
-        password: this.password
-      }).toPromise();
-      console.log('token', response);
-      this.auth.token = response.token;
-    } catch (e) {
+    this.auth.login(this.username,  this.password).catch(e => {
       this.error = e.error.msg;
-    }
+    });
   }
 
 }
