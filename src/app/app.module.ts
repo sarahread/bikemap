@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AgmCoreModule } from '@agm/core';
+import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -15,7 +15,8 @@ import { AddComponent } from './trips/add/add.component';
 import { JWTInterceptor } from './interceptors/jwt';
 import { AuthService } from './auth/auth.service';
 import { TripService } from './trips/trip.service';
-import { MapComponent } from './trips/map/map.component';}
+import { MapsService } from './trips/maps.service';
+import { MapComponent } from './trips/map/map.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,8 @@ import { MapComponent } from './trips/map/map.component';}
   providers: [
     AuthService,
     TripService,
+    MapsService,
+    GoogleMapsAPIWrapper,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BaseUrlInterceptor,

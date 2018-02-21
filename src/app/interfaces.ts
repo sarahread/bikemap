@@ -1,14 +1,14 @@
-export interface LatLng {
+export interface LatLngQuery {
+  query: string,
   lat: number,
   lng: number
 }
 
 export interface Trip {
   id?: string;
-  start: { query: string, lat?: number, lng?: number };
-  end: { query: string, lat?: number, lng?: number };
-  path?: any;
-  finishedPath?: any;
-  distanceTravelled?: number;
+  start: LatLngQuery;
+  end: LatLngQuery;
+  path?: any[];
+  progress?: number[];
   totalDistance?: number;
 }

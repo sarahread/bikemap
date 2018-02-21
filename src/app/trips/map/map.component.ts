@@ -2,6 +2,7 @@ import { environment } from '../../../environments/environment';
 import { Component, Input, OnInit } from '@angular/core';
 import { GoogleMapsAPIWrapper, PolylineManager, AgmPolyline } from '@agm/core';
 import { Trip } from '../../interfaces';
+import { MapsService } from '../maps.service';
 
 declare var google: any;
 
@@ -12,18 +13,23 @@ declare var google: any;
   providers: [GoogleMapsAPIWrapper, PolylineManager]
 })
 export class MapComponent implements OnInit {
-    @Input() trips: Trip[] = [];
-    // routes: Route[] = [
-    //   {
-    //     start: {
-    //       query: `Land's End, UK`
-    //     },
-    //     end: {
-    //       query: `John 'o Groats, UK`
-    //     },
-    //     distanceTravelled: [10, 10, 10, 11.52, 10.36].reduce((a, b) => a + b ) * 1000 || 0 // Convert to km
-    //   } 
-    // ];
+    @Input() trips: Trip[] = [
+      {
+        start: {
+          query: `Land's End, UK`,
+          lat: null,
+          lng: null
+        },
+        end: {
+          query: `John 'o Groats, UK`,
+          lat: null,
+          lng: null
+        },
+        progress: [10, 10, 10, 11.52, 10.36, 11.27, 12.5, 12.57, 12.26, 10.7, 15.14, 18.79, 16.17, 14.84, 16.46, 11.32],
+      } 
+    ];
+
+    finishedPaths = [];
 
     directionsService;
     placesService;
@@ -268,7 +274,11 @@ export class MapComponent implements OnInit {
       }
     ];
 
-    constructor(private mapsApi: GoogleMapsAPIWrapper, private polylineManager: PolylineManager) {}
+    constructor(
+      private mapsApi: GoogleMapsAPIWrapper,
+      private polylineManager: PolylineManager,
+      private mapsService: MapsService
+    ) {}
 
     ngOnInit() {}
 
@@ -284,68 +294,36 @@ export class MapComponent implements OnInit {
 
       for (let ii = 0; ii < this.trips.length; ii++) {
         const trip = this.trips[ii];
-        const start = await this.searchLocation(trip.start.query);
-        const end = await this.searchLocation(trip.end.query);
+
+        const start = await this.mapsService.getCoordsForQuery(trip.start.query);
+        const end = await this.mapsService.getCoordsForQuery(trip.end.query);
 
         Object.assign(trip.start, start);
         Object.assign(trip.end, end);
-
-        [trip.path, trip.totalDistance] = await new Promise<any>(resolve => {
-          this.directionsService.route({
-            start,
-            end,
-            waypoints: [],
-            optimizeWaypoints: true,
-            travelMode: 'DRIVING'
-          }, (response, status) => {
-            if (status == 'OK') {
-              const path = response.routes[0].overview_path;
-
-              // Calculate total length of path
-
-              const totalDistance = response.routes[0].legs.reduce((a, b) => {
-                return a ? a.distance.value: 0 + b ? b.distance.value : 0;
-              }, 0);
-
-              resolve([path, totalDistance]);
-            } else {
-              console.log('error searching route');
-            }
-          });
-        });
+       
+        trip.path = await this.mapsService.getPath(start, end);
       }
 
       this.updateMap();
     }
 
-    async searchLocation(query: string): Promise<any>{
-      return new Promise(resolve => {
-          this.placesService.textSearch({ query }, (response, status) => {
-            if (status == 'OK') {
-              resolve(response[0].geometry.location);
-            } else {
-              console.log('error searching location:', query);
-            }
-          });
-        });
-    }
-
     updateMap() {
-      this.trips.forEach(trip => {
-        const targetDistance = trip.distanceTravelled / trip.totalDistance * trip.totalDistance;
-        console.log(trip.totalDistance, trip.distanceTravelled, targetDistance)
+      this.trips.forEach((trip, index) => {
+        const progress = this.mapsService.sumProgress(trip.progress);
+        const targetDistance = progress / trip.totalDistance * trip.totalDistance;
+        
         let distance = 0;
 
         // TODO: Allow being between path points
 
         for (let ii = 1; ii < trip.path.length - 1; ii++) {
           distance += google.maps.geometry.spherical.computeDistanceBetween(
-            trip.path[ii],
-            trip.path[ii + 1]
+            new google.maps.LatLng(trip.path[ii]),
+            new google.maps.LatLng(trip.path[ii + 1])
           );
 
           if (distance >= targetDistance) {
-            trip.finishedPath = trip.path.slice(0, Math.max(2, ii - 1));
+            this.finishedPaths[index] = trip.path.slice(0, Math.max(2, ii - 1));
             break;
           }
         }
@@ -358,9 +336,8 @@ export class MapComponent implements OnInit {
       this.bounds = new google.maps.LatLngBounds();
       this.trips.forEach(trip => {
         trip.path.forEach(p => {
-          this.bounds.extend(new google.maps.LatLng(p.lat(), p.lng()));
+          this.bounds.extend(new google.maps.LatLng(p.lat, p.lng));
         });
       });
-      console.log('bounds', this.bounds);
     }
 }

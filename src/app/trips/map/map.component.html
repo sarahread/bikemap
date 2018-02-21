@@ -1,10 +1,10 @@
 <agm-map [styles]="styles" (mapReady)="onMapReady($event)" [fitBounds]="bounds">
-  <agm-polyline [strokeColor]="'red'" *ngFor="let route of routes">
-      <agm-polyline-point *ngFor="let p of route.path" [latitude]="p.lat()" [longitude]="p.lng()"></agm-polyline-point>
+  <agm-polyline [strokeColor]="'red'" *ngFor="let trip of trips">
+      <agm-polyline-point *ngFor="let p of trip.path" [latitude]="p.lat" [longitude]="p.lng"></agm-polyline-point>
   </agm-polyline>
 
-  <agm-polyline [strokeColor]="'white'" *ngFor="let route of routes">
-    <agm-polyline-point *ngFor="let p of route.finishedPath" [latitude]="p.lat()" [longitude]="p.lng()"></agm-polyline-point>
+  <agm-polyline [strokeColor]="'white'" *ngFor="let trip of trips">
+    <agm-polyline-point *ngFor="let p of finishedPaths[$index]" [latitude]="p.lat" [longitude]="p.lng"></agm-polyline-point>
   </agm-polyline>
 </agm-map>
 
