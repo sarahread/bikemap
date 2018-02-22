@@ -1,4 +1,4 @@
-<agm-map [styles]="styles" (mapReady)="onMapReady($event)" [fitBounds]="bounds">
+<agm-map [styles]="styles" (mapReady)="onMapReady($event)" [fitBounds]="bounds" [backgroundColor]="'none'" [streetViewControl]="false">
   <agm-polyline [strokeColor]="'#585858'" [strokeWeight]="3" *ngFor="let trip of trips">
       <agm-polyline-point *ngFor="let p of trip.path" [latitude]="p.lat" [longitude]="p.lng"></agm-polyline-point>
   </agm-polyline>
@@ -7,5 +7,3 @@
     <agm-polyline-point *ngFor="let p of finishedPaths[i]" [latitude]="p.lat" [longitude]="p.lng"></agm-polyline-point>
   </agm-polyline>
 </agm-map>
-
-<input type="range" min="0.0" max="1.0" step="0.1" [(ngModel)]="percent" (ngModelChange)="updateMap()">
