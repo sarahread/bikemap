@@ -59,7 +59,10 @@ export class MapsService {
         let distance = 0;
 
         for (let ii = 1; ii < path.length; ii++) {
-            distance += this.getDistanceBetween(path[ii - 1], path[ii]);
+            const a = new google.maps.LatLng(path[ii - 1]);
+            const b = new google.maps.LatLng(path[ii]);
+
+            distance += this.getDistanceBetween(a, b);
         }
 
         return distance;
