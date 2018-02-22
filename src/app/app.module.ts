@@ -14,6 +14,7 @@ import { BaseUrlInterceptor } from './interceptors/baseurl';
 import { AddComponent } from './trips/add/add.component';
 import { JWTInterceptor } from './interceptors/jwt';
 import { AuthService } from './auth/auth.service';
+import { TripsListComponent } from './trips/trips-list/trips-list.component';
 import { TripService } from './trips/trip.service';
 import { MapsService } from './trips/maps.service';
 import { MapComponent } from './trips/map/map.component';
@@ -25,7 +26,8 @@ import { MapComponent } from './trips/map/map.component';
     RegisterComponent,
     HomeComponent,
     AddComponent,
-    MapComponent
+    MapComponent,
+    TripsListComponent
   ],
   imports: [
     BrowserModule,
