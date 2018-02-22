@@ -30,9 +30,6 @@ export class MapComponent implements OnInit {
     ];
 
     finishedPaths = [];
-
-    directionsService;
-    placesService;
     map;
     bounds;
 
@@ -287,9 +284,6 @@ export class MapComponent implements OnInit {
     async onMapReady(map) {
       this.map = map;
 
-      this.directionsService = new google.maps.DirectionsService;
-      this.placesService = new google.maps.places.PlacesService(map);
-      
       // Fetch lat / lng / path for routes
 
       for (let ii = 0; ii < this.trips.length; ii++) {
