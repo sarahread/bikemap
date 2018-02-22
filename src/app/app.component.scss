@@ -1,8 +1,13 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800');
 
+html, body {
+    height: 100%;
+}
+
 body {
     background-color: #000000;
-    margin: 20px;
+    padding: 20px;
+    margin: 0;
 }
 
 * {
@@ -14,17 +19,27 @@ input {
     outline: none;
 }
 
+.sidebar {
+    width: 260px;
+    float: left;
+    padding-right: 20px;
+}
+
 .logo {
     font-weight: 100;
     font-size: 36px;
     color: #88FF00;
     letter-spacing: 1px;
-    margin: 20px 0;
+    margin: 0 0 20px 0;
     padding: 0;
 }
 
 trips-list {
     display: block;
-    width: 260px;
-    float: left;
+}
+
+app-map {
+    display: block;
+    background: #000;
+    height: 100%;
 }
