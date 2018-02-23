@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Injectable } from '@angular/core';
 import { Trip, NewTrip } from '../../interfaces';
 import { TripService } from '../trip.service';
-import { MapsService } from '../maps.service';
+import { MapUtilsService } from '../map-utils.service';
 
 @Component({
   selector: 'trip-add',
@@ -17,29 +17,29 @@ export class TripAddComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private tripService: TripService,
-    private mapsService: MapsService
+    private mapUtils: MapUtilsService
   ) { }
 
   ngOnInit() {
   }
 
   async add() {
-    const startCoords = await this.mapsService.getCoordsForQuery(this.trip.start.query);
-    const endCoords = await this.mapsService.getCoordsForQuery(this.trip.end.query);
+    const startCoords = await this.mapUtils.getCoordsForQuery(this.trip.start.query);
+    const endCoords = await this.mapUtils.getCoordsForQuery(this.trip.end.query);
 
     if (!startCoords || !endCoords) {
       // TODO: Handle error
       return;
     }
 
-    const path = await this.mapsService.getPath(startCoords, endCoords);
+    const path = await this.mapUtils.getPath(startCoords, endCoords);
 
     if (!path) {
       // TODO: Handle error
       return;
     }
 
-    const totalDistance = this.mapsService.getPathDistance(path);
+    const totalDistance = this.mapUtils.getPathDistance(path);
     
     Object.assign(this.trip.start, startCoords);
     Object.assign(this.trip.end, endCoords);

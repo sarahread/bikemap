@@ -16,9 +16,10 @@ import { JWTInterceptor } from './interceptors/jwt';
 import { AuthService } from './auth/auth.service';
 import { TripsListComponent } from './trips/trips-list/trips-list.component';
 import { TripService } from './trips/trip.service';
-import { MapsService } from './trips/maps.service';
+import { MapUtilsService } from './trips/map-utils.service';
 import { MapComponent } from './trips/map/map.component';
-import { FormatDistancePipe } from './pipes';
+import { FormatDistancePipe, SumProgressPipe } from './pipes';
+import { MessagesService } from './services/messages.service';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { FormatDistancePipe } from './pipes';
     TripAddComponent,
     MapComponent,
     TripsListComponent,
-    FormatDistancePipe
+    FormatDistancePipe,
+    SumProgressPipe
   ],
   imports: [
     BrowserModule,
@@ -37,14 +39,15 @@ import { FormatDistancePipe } from './pipes';
     HttpClientModule,
     AgmCoreModule.forRoot({
       apiKey: environment.googleMapsApiKey,
-      libraries: ['places']
+      libraries: ['places', 'geometry']
     })
   ],
   providers: [
     AuthService,
     TripService,
-    MapsService,
+    MapUtilsService,
     GoogleMapsAPIWrapper,
+    MessagesService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BaseUrlInterceptor,

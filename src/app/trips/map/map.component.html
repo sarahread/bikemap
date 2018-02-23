@@ -1,9 +1,9 @@
 <agm-map [styles]="styles" (mapReady)="onMapReady($event)" [fitBounds]="bounds" [backgroundColor]="'none'" [streetViewControl]="false">
-  <agm-polyline [strokeColor]="'#585858'" [strokeWeight]="3" *ngFor="let trip of trips">
+  <agm-polyline [strokeColor]="'#585858'" [strokeWeight]="3" *ngFor="let trip of tripService.trips">
       <agm-polyline-point *ngFor="let p of trip.path" [latitude]="p.lat" [longitude]="p.lng"></agm-polyline-point>
   </agm-polyline>
 
-  <agm-polyline [strokeColor]="'#88FF00'" [strokeWeight]="3" *ngFor="let trip of trips; let i = index">
+  <agm-polyline [strokeColor]="'#88FF00'" [strokeWeight]="3" *ngFor="let trip of tripService.trips; let i = index">
     <agm-polyline-point *ngFor="let p of finishedPaths[i]" [latitude]="p.lat" [longitude]="p.lng"></agm-polyline-point>
   </agm-polyline>
 </agm-map>

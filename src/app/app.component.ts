@@ -9,7 +9,7 @@ import { AuthService } from './auth/auth.service';
 })
 @Injectable()
 export class AppComponent {
-  constructor(private auth: AuthService) {
-
-  }
+  constructor(
+    private auth: AuthService
+  ) {}
 }

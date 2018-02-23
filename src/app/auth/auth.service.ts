@@ -4,8 +4,12 @@ import { Trip } from '../interfaces';
 
 @Injectable()
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.refreshUser();
+  }
   
+  public user: any;
+
   public get token(): string {
   	// TODO: This should work without localstorage, ie: private mode in safari
   	return window.localStorage.getItem('token') || '';
@@ -19,16 +23,12 @@ export class AuthService {
     }
   }
 
-  public get user(): string {
-  	// TODO: This should work without localstorage, ie: private mode in safari
-  	return JSON.parse(window.localStorage.getItem('user')) || '';
-  }
-
-  public set user(user: string) {
-    if (user) {
-      window.localStorage.setItem('user', JSON.stringify(user));
-    } else {
-      window.localStorage.removeItem('user');
+  public async refreshUser(): Promise<any> {
+    this.user = JSON.parse(window.localStorage.getItem('user')) || '';
+    
+    if (!this.user) {
+      this.user = await this.http.get('auth/user').toPromise();
+      window.localStorage.setItem('user', JSON.stringify(this.user));
     }
   }
 
@@ -37,14 +37,16 @@ export class AuthService {
       username,
       password
     }).toPromise().then((response: any) => {
-      this.user = response.user;
       this.token = response.token;
+      this.refreshUser();
     });
   }
 
   public async logout(): Promise<void> {
     this.token = null;
     this.user = null;
+    window.localStorage.removeItem('user');
+    window.location.reload();
   }
 
   public async register(username: string, password: string): Promise<any> {

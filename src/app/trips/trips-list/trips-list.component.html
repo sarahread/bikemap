@@ -1,18 +1,20 @@
-<div class="trip" *ngFor="let trip of tripService.trips" >
+<div class="trip" [class.current]="currentTrip == trip" *ngFor="let trip of tripService.trips; let i = index" (click)="selectTrip(trip)">
     <div class="locations">
         <span class="start">{{trip.start.query}}</span>
         <span class="end">{{trip.end.query}}</span>
     </div>
     <div class="progress-bar">
-        <div class="complete" style="width: 50%"></div>
+        <div class="complete" [ngStyle]="{width: ((trip.progress | sumProgress) / trip.totalDistance * 100) + '%'}"></div>
     </div>
     <div class="distance">
-        <span class="progress">268</span> / <span class="total">{{trip.totalDistance | formatDistance}}</span>km
+        <span class="progress">{{trip.progress | sumProgress | formatDistance}}</span> / <span class="total">{{trip.totalDistance | formatDistance}}</span>km
     </div>
 
     <div class="actions">
-        <input type="text" placeholder="distance">
-        <button class="primary log-button">Log</button>
-        <button class="secondary delete-button" (click)="delete(trip)">X</button>
+        <form (ngSubmit)="log(trip, i)">
+            <input type="number" placeholder="distance" [(ngModel)]="distances[i]" name="distance">
+            <button class="primary log-button">Log</button>
+            <button class="secondary delete-button" (click)="delete(trip)">X</button>
+        </form>
     </div>
 </div>

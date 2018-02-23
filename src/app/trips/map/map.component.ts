@@ -2,36 +2,41 @@ import { environment } from '../../../environments/environment';
 import { Component, Input, OnInit } from '@angular/core';
 import { GoogleMapsAPIWrapper, PolylineManager, AgmPolyline } from '@agm/core';
 import { Trip } from '../../interfaces';
-import { MapsService } from '../maps.service';
+import { MapUtilsService } from '../map-utils.service';
+import { TripService } from '../trip.service';
+import { MessagesService } from '../../services/messages.service';
 
-declare var google: any;
+declare const google: any;
 
 @Component({
-  selector: 'app-map',
+  selector: 'map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
   providers: [GoogleMapsAPIWrapper, PolylineManager]
 })
 export class MapComponent implements OnInit {
-    @Input() trips: Trip[] = [
-      {
-        start: {
-          query: `Land's End, UK`,
-          lat: null,
-          lng: null
-        },
-        end: {
-          query: `John 'o Groats, UK`,
-          lat: null,
-          lng: null
-        },
-        progress: [10, 10, 10, 11.52, 10.36, 11.27, 12.5, 12.57, 12.26, 10.7, 15.14, 18.79, 16.17, 14.84, 16.46, 11.32, 16.01, 16.73],
-      } 
-    ];
+    // @Input() trips: Trip[] = [
+    //   {
+    //     start: {
+    //       query: `Land's End, UK`,
+    //       lat: null,
+    //       lng: null
+    //     },
+    //     end: {
+    //       query: `John 'o Groats, UK`,
+    //       lat: null,
+    //       lng: null
+    //     },
+    //     progress: [10, 10, 10, 11.52, 10.36, 11.27, 12.5, 12.57, 12.26, 10.7, 15.14, 18.79, 16.17, 14.84, 16.46, 11.32, 16.01, 16.73],
+    //   } 
+    // ];
 
-    finishedPaths = [];
-    map;
-    bounds;
+    private mapReady: boolean = false;
+    private finishedPaths = [];
+    private map: any;
+    private bounds: any;
+
+    // TODO: Move styles to separate file
 
     styles = [
       {
@@ -274,8 +279,20 @@ export class MapComponent implements OnInit {
     constructor(
       private mapsApi: GoogleMapsAPIWrapper,
       private polylineManager: PolylineManager,
-      private mapsService: MapsService
-    ) {}
+      private mapUtils: MapUtilsService,
+      private tripService: TripService,
+      private messagesService: MessagesService
+    ) {
+      this.tripService.tripsChanged.subscribe(trips => {
+        if (this.mapReady) {
+          this.updateMap();
+        }
+      });
+
+      this.messagesService.on('map:zoom', trip => {
+        this.zoomToTrip(trip);
+      });
+    }
 
     ngOnInit() {}
 
@@ -283,28 +300,17 @@ export class MapComponent implements OnInit {
 
     async onMapReady(map) {
       this.map = map;
-
-      // Fetch lat / lng / path for routes
-
-      for (let ii = 0; ii < this.trips.length; ii++) {
-        const trip = this.trips[ii];
-
-        const start = await this.mapsService.getCoordsForQuery(trip.start.query);
-        const end = await this.mapsService.getCoordsForQuery(trip.end.query);
-
-        Object.assign(trip.start, start);
-        Object.assign(trip.end, end);
-       
-        trip.path = await this.mapsService.getPath(start, end);
-      }
+      this.mapReady = true;
 
       this.updateMap();
     }
 
-    updateMap() {
-      this.trips.forEach((trip, index) => {
-        const progress = this.mapsService.sumProgress(trip.progress);
-        const totalDistance = this.mapsService.getPathDistance(trip.path);
+    private async updateMap() {
+      await this.mapUtils.waitForLoad();
+
+      this.tripService.trips.forEach((trip, index) => {
+        const progress = this.mapUtils.sumProgress(trip.progress);
+        const totalDistance = this.mapUtils.getPathDistance(trip.path);
         const targetDistance = progress / totalDistance * totalDistance;
         
         let distance = 0;
@@ -327,12 +333,19 @@ export class MapComponent implements OnInit {
       this.zoomToFit();
     }
 
-    zoomToFit() {
+    private zoomToFit() {
       this.bounds = new google.maps.LatLngBounds();
-      this.trips.forEach(trip => {
+      this.tripService.trips.forEach(trip => {
         trip.path.forEach(p => {
           this.bounds.extend(new google.maps.LatLng(p.lat, p.lng));
         });
+      });
+    }
+
+    private zoomToTrip(trip: Trip) {
+      this.bounds = new google.maps.LatLngBounds();
+      trip.path.forEach(p => {
+        this.bounds.extend(new google.maps.LatLng(p.lat, p.lng));
       });
     }
 }

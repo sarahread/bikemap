@@ -5,15 +5,19 @@ import { LatLngQuery } from '../interfaces';
 declare var google: any;
 
 @Injectable()
-export class MapsService {
+export class MapUtilsService {
     public directionsService;
     public placesService;
 
     constructor(private loader: MapsAPILoader) {
-        loader.load().then(() => {
+        this.waitForLoad().then(() => {
             this.directionsService = new google.maps.DirectionsService;
             this.placesService = new google.maps.places.PlacesService(document.createElement('div'));
         });
+    }
+
+    public async waitForLoad(): Promise<void> {
+        return await this.loader.load();
     }
 
     public async getCoordsForQuery(query: string): Promise<LatLngQuery> {
@@ -33,7 +37,6 @@ export class MapsService {
     }
 
     public async getPath(start: LatLngQuery, end: LatLngQuery): Promise<any> {
-        console.log('start', start);
         return await new Promise<any>((resolve, reject) => {
             this.directionsService.route({
                 origin: start,
@@ -77,6 +80,6 @@ export class MapsService {
     }
 
     public sumProgress(progress: number[]): number {
-        return progress.reduce((a, b) => a + b ) * 1000 || 0; // Convert to km
+        return progress.reduce((a, b) => { return a + b; }, 0) * 1000 || 0; // Convert to km
     }
 }
