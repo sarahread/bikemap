@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { TripService } from '../trip.service';
+import { Trip } from '../../interfaces';
 
 @Component({
   selector: 'trips-list',
@@ -6,9 +8,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./trips-list.component.scss'],
 })
 export class TripsListComponent implements OnInit {
+
   constructor(
+    private tripService: TripService
   ) { }
   
-  ngOnInit() {
+  async ngOnInit() {
+  }
+
+  private async delete(trip: Trip) {
+    if (confirm('Are you sure?')) {
+      await this.tripService.delete(trip);
+      this.tripService.refresh();
+    }
   }
 }

@@ -11,13 +11,14 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { BaseUrlInterceptor } from './interceptors/baseurl';
-import { AddComponent } from './trips/add/add.component';
+import { TripAddComponent } from './trips/trip-add/trip-add.component';
 import { JWTInterceptor } from './interceptors/jwt';
 import { AuthService } from './auth/auth.service';
 import { TripsListComponent } from './trips/trips-list/trips-list.component';
 import { TripService } from './trips/trip.service';
 import { MapsService } from './trips/maps.service';
 import { MapComponent } from './trips/map/map.component';
+import { FormatDistancePipe } from './pipes';
 
 @NgModule({
   declarations: [
@@ -25,9 +26,10 @@ import { MapComponent } from './trips/map/map.component';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    AddComponent,
+    TripAddComponent,
     MapComponent,
-    TripsListComponent
+    TripsListComponent,
+    FormatDistancePipe
   ],
   imports: [
     BrowserModule,

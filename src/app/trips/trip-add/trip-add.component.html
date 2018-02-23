@@ -1,0 +1,5 @@
+<form (ngSubmit)="add()">
+  <input type="text" placeholder="Start" [(ngModel)]="trip.start.query" name="start">
+  <input type="text" placeholder="End" [(ngModel)]="trip.end.query" name="end">
+  <button class="primary">Add Trip</button>
+</form>

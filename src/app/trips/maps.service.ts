@@ -33,6 +33,7 @@ export class MapsService {
     }
 
     public async getPath(start: LatLngQuery, end: LatLngQuery): Promise<any> {
+        console.log('start', start);
         return await new Promise<any>((resolve, reject) => {
             this.directionsService.route({
                 origin: start,

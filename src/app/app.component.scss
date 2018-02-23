@@ -43,3 +43,47 @@ app-map {
     background: #000;
     height: 100%;
 }
+
+input, button {
+    height: 30px;
+    padding: 0 10px;
+    background: #000;
+    border-width: 1px;
+    border-style: solid;
+    text-transform: uppercase;
+    float: left;
+}
+
+input[type="text"] {
+    border-color: #fff;
+    color: #fff;
+    &::placeholder {
+        color: #585858;
+    }
+}
+
+button {
+    font-weight: 900;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+
+    &.primary {
+        border-color: #88FF00;
+        color: #88FF00;
+
+        &:hover {
+            background: #88FF00;
+            color: #fff;
+        }
+    }
+
+    &.secondary {
+        border-color: #FF1200;
+        color: #FF1200;
+
+        &:hover {
+            background: #FF1200;
+            color: #fff;
+        }
+    }
+}

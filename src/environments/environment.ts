@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-  apiPath: 'http://159.203.59.158:3001',
+  apiPath: 'https://bikemap-api.haqt.com',
   googleMapsApiKey: 'AIzaSyCtchAX-pvsAvelH5z7bnIHudPzNl1aSw0'
 };

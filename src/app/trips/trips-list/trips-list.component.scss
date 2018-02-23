@@ -65,42 +65,18 @@
         }
         
         input[type="text"] {
-            border-color: #fff;
-            color: #fff;
             float: left;
             margin-right: 10px;
             width: 100px;
-
-            &::placeholder {
-                color: #585858;
-            }
         }
 
         button {
-            font-weight: 900;
-            cursor: pointer;
-            transition: background-color 0.15s, color 0.15s;
-
             &.log-button {
-                border-color: #88FF00;
-                color: #88FF00;
                 float: left;
-
-                &:hover {
-                    background: #88FF00;
-                    color: #fff;
-                }
             }
 
             &.delete-button {
-                border-color: #FF1200;
-                color: #FF1200;
                 float: right;
-
-                &:hover {
-                    background: #FF1200;
-                    color: #fff;
-                }
             }
         }
     }

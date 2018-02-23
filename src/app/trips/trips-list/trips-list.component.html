@@ -1,37 +1,18 @@
-<div class="trip current">
+<div class="trip" *ngFor="let trip of tripService.trips" >
     <div class="locations">
-        <span class="start">Edinburgh</span>
-        <span class="end">Glasgow</span>
+        <span class="start">{{trip.start.query}}</span>
+        <span class="end">{{trip.end.query}}</span>
     </div>
     <div class="progress-bar">
         <div class="complete" style="width: 50%"></div>
     </div>
     <div class="distance">
-        <span class="progress">268</span> / <span class="total">1219</span>km
+        <span class="progress">268</span> / <span class="total">{{trip.totalDistance | formatDistance}}</span>km
     </div>
 
     <div class="actions">
         <input type="text" placeholder="distance">
-        <button class="log-button">Log</button>
-        <button class="delete-button">X</button>
+        <button class="primary log-button">Log</button>
+        <button class="secondary delete-button" (click)="delete(trip)">X</button>
     </div>
 </div>
-
-<div class="trip">
-        <div class="locations">
-            <span class="start">Calgary</span>
-            <span class="end">Edmonton</span>
-        </div>
-        <div class="progress-bar">
-            <div class="complete" style="width: 50%"></div>
-        </div>
-        <div class="distance">
-            <span class="progress">268</span> / <span class="total">1219</span>km
-        </div>
-    
-        <div class="actions">
-            <input type="text" placeholder="distance">
-            <button class="log-button">Log</button>
-            <button class="delete-button">X</button>
-        </div>
-    </div>
