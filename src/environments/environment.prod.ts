@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiPath: '',
+  apiPath: 'https://bikemap-api.haqt.com',
   googleMapsApiKey: 'AIzaSyCtchAX-pvsAvelH5z7bnIHudPzNl1aSw0'
 };
