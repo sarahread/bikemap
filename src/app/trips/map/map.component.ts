@@ -27,14 +27,14 @@ export class MapComponent implements OnInit {
     //       lat: null,
     //       lng: null
     //     },
-    //     progress: [10, 10, 10, 11.52, 10.36, 11.27, 12.5, 12.57, 12.26, 10.7, 15.14, 18.79, 16.17, 14.84, 16.46, 11.32, 16.01, 16.73],
+    //     progress: [10, 10, 10, 11.52, 10.36, 11.27, 12.5, 12.57, 12.26, 10.7, 15.14, 18.79, 16.17, 14.84, 16.46, 11.32, 16.01, 16.73, 16.15],
     //   } 
     // ];
-
-    private mapReady: boolean = false;
-    private finishedPaths = [];
-    private map: any;
-    private bounds: any;
+    tripService = this._tripService;
+    mapReady: boolean = false;
+    finishedPaths = [];
+    map: any;
+    bounds: any;
 
     // TODO: Move styles to separate file
 
@@ -280,7 +280,7 @@ export class MapComponent implements OnInit {
       private mapsApi: GoogleMapsAPIWrapper,
       private polylineManager: PolylineManager,
       private mapUtils: MapUtilsService,
-      private tripService: TripService,
+      private _tripService: TripService,
       private messagesService: MessagesService
     ) {
       this.tripService.tripsChanged.subscribe(trips => {

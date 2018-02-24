@@ -9,13 +9,14 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  username: string;
-  password: string;
-  error: string;
+  auth = this.authService;
+  private username: string;
+  private password: string;
+  private error: string;
 
   constructor(
     private http: HttpClient,
-    private auth: AuthService
+    private authService: AuthService
   ) { }
   
   ngOnInit() {

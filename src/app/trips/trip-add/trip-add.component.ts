@@ -1,9 +1,12 @@
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, Injectable } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 import { Trip, NewTrip } from '../../interfaces';
 import { TripService } from '../trip.service';
 import { MapUtilsService } from '../map-utils.service';
+
+// TODO: Better handling of weird querys with no / multiple results
+// TODO: Properly capitalize querys
 
 @Component({
   selector: 'trip-add',
@@ -11,7 +14,7 @@ import { MapUtilsService } from '../map-utils.service';
   styleUrls: ['./trip-add.component.scss']
 })
 @Injectable()
-export class TripAddComponent implements OnInit {
+export class TripAddComponent {
   trip: Trip = Object.assign({}, NewTrip);
 
   constructor(
@@ -19,9 +22,6 @@ export class TripAddComponent implements OnInit {
     private tripService: TripService,
     private mapUtils: MapUtilsService
   ) { }
-
-  ngOnInit() {
-  }
 
   async add() {
     const startCoords = await this.mapUtils.getCoordsForQuery(this.trip.start.query);

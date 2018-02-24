@@ -9,11 +9,12 @@ import { MessagesService } from '../../services/messages.service';
   styleUrls: ['./trips-list.component.scss'],
 })
 export class TripsListComponent {
+  tripService = this._tripService;
   private currentTrip: Trip;
   private distances: number[] = [];
 
   constructor(
-    private tripService: TripService,
+    private _tripService: TripService,
     private messagesService: MessagesService
   ) { }
   
