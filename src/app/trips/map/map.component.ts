@@ -27,8 +27,8 @@ export class MapComponent implements OnInit {
     //       lat: null,
     //       lng: null
     //     },
-    //     progress: [10, 10, 10, 11.52, 10.36, 11.27, 12.5, 12.57, 12.26, 10.7, 15.14, 18.79, 16.17, 14.84, 16.46, 11.32, 16.01, 16.73, 16.15],
-    //   } 
+    //     progress: [10, 10, 10, 11.52, 10.36, 11.27, 12.5, 12.57, 12.26, 10.7, 15.14, 18.79, 16.17, 14.84, 16.46, 11.32, 16.01, 16.73, 16.15, 16.95, 15.67, 14.86, 17.15, 16.37, 15.45, 16.62, 16.56, 18.06, 16.35, 17.32, 17.86, 23.13, 36.68, 26, 25.41, 12.95, 26.65, 25.63, 28.43, 17.94, 23.42, 26.23, 26.33, 11.64, 27.65, 27.96, 27, 3.36, 26.48, 26.14, 26.97, 26.64, 24.66, 27.14, 26.90, 26.18, 24.82, 22.92, 1.56, 27.32, 26.11, 25.88, 26.66, 27.39, 22.01, 27.3, 26.93, 24.52, 28.15, 27.14, 27.96, 26.17, 28.23, 29.07, 26.67, 28.61, 29.12, 26.34, 26.18],
+    //   }
     // ];
     tripService = this._tripService;
     mapReady: boolean = false;
@@ -312,7 +312,7 @@ export class MapComponent implements OnInit {
         const progress = this.mapUtils.sumProgress(trip.progress);
         const totalDistance = this.mapUtils.getPathDistance(trip.path);
         const targetDistance = progress / totalDistance * totalDistance;
-        
+
         let distance = 0;
 
         // TODO: Allow being between path points
